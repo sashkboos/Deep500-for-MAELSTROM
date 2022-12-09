@@ -17,10 +17,14 @@ class CPUGPUTimerBase:
         return f(*args, **kwargs)
 
     def start(self, key: TimeType, gpu=False) -> None:
-        self._do_call('start', gpu, key)
+        self.cpu_timer.start(key)
+        if gpu:
+            self.gpu_timer.start(key)
 
     def end(self, key: TimeType, gpu=False) -> None:
-        self._do_call('end', gpu, key)
+        self.cpu_timer.end(key)
+        if gpu:
+            self.gpu_timer.end(key)
 
     def get_time(self, key: TimeType, gpu=False) -> List[float]:
         return self._do_call('get_time', gpu, key)
