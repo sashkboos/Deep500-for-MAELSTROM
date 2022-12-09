@@ -38,7 +38,8 @@ setup(
         'tqdm',
         'cmake',
         'jinja2',
-        'pillow'
+        'pillow',
+        'cupy'
     ],
     classifiers=[
         'Programming Language :: Python :: 3.5',
