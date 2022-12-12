@@ -1,6 +1,8 @@
 from typing import ClassVar
 
 import cupy
+import tensorflow as tf
+from tensorflow import keras
 
 from . timer import *
 from . timer import _TimerImpl, _CPUTimerImpl
@@ -45,9 +47,39 @@ class _CuPyGPUTimerImpl(_TimerImpl):
         self._events.append(end)
         return t
 
+
 class CPUGPUTimer(CPUGPUTimerBase):
     """Timer that supports timing both CPU and GPU runtimes."""
 
     def __init__(self):
         super().__init__(cpu_timer_impl=_CPUTimerImpl,
                          gpu_timer_impl=_CuPyGPUTimerImpl)
+
+
+class TimerCallback(keras.callbacks.Callback):
+    """Support some basic timing in TensorFlow Model.fit loops."""
+
+    def __init__(self, timer, gpu=False):
+        """
+        @param timer Timer instance to use for timing.
+        @param gpu Whether to time on the GPU for batches.
+
+        """
+        super().__init__()
+        self.timer = timer
+        self.gpu = gpu
+
+    def on_epoch_begin(self, epoch, logs=None):
+        self.timer.start(TimeType.EPOCH)
+
+    def on_epoch_end(self, epoch, logs=None):
+        self.timer.end(TimeType.EPOCH)
+        self.timer.complete_all()
+
+    def on_train_batch_begin(self, batch, logs=None):
+        self.timer.start(TimeType.BATCH, gpu=self.gpu)
+
+    def on_train_batch_end(self, batch, logs=None):
+        self.timer.end(TimeType.BATCH, gpu=self.gpu)
+        if batch % 10 == 0:
+            self.timer.complete_all()
