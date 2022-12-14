@@ -4,7 +4,7 @@ import numpy as np
 import random
 import math
 from typing import Any, Callable, Dict, List
-from collections import Iterator
+from collections.abc import Iterator
 from deep500.lv2.dataset import Dataset
 from deep500.lv2.event import SamplerEvent
 
