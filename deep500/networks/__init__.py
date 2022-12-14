@@ -1,7 +1,13 @@
-from .pytorch_mnist import export_simple_cnn
-from .pytorch_deep_mnist import export_deep_mnist
-from .pytorch_resnet import export_resnet
-from .pytorch_wide_resnet import export_wide_resnet
+try:
+    import torch
+    _has_torch = True
+except ImportError:
+    _has_torch = False
+if _has_torch:
+    from .pytorch_mnist import export_simple_cnn
+    from .pytorch_deep_mnist import export_deep_mnist
+    from .pytorch_resnet import export_resnet
+    from .pytorch_wide_resnet import export_wide_resnet
 
 def export_network(name: str, batch_size: int, *args, **kwargs) -> str:
     """ Exports a network by name and returns the path to the output file.
