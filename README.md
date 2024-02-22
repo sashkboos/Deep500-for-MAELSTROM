@@ -150,6 +150,11 @@ Further, this synchronization cost is incurred every time `end` is called.
 Additionally, TensorFlow's API may limit how fine-grained timing can be, as, e.g., backpropagation may not be broken out as nicely as it is in PyTorch.
 In this case, it is probably best to limit timing to batch or epoch granularity.
 
+Note about using Deep500 in Julich JURECA-DC - When trying to install deep500 on Jureca using a similar software stack as we had used in previous benchmarking runs, I noticed that the latest Tensorflow version available in the server (TensorFlow/2.11.0-CUDA-11.7), led to a conflict with the protobuf version. That version of TF requires the use of some other modules including protobuf 3.19.4, while deep500 was trying to install newer versions like 4.25.2. This is coming from the onxx version that is installed with deep500, which tries to install the latex onnx (1.15.) requiring an updated protobuf version. This problem can be solved if ones install onnx 1.11, allowing developers to use the TF version available in JURECA. 
+
+Note about using Deep500 with MAELSTROM AP3 - For AP3, we encountered an issue when testing Deep500, due to the fact that the tensorflow dataset doesn't have a predefined length. This can be  solved by providing the ‘steps_per_epoch’ explicitly 
+
+
 ----
 
 ### A More Complete Example
